@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogContent,
-	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
@@ -21,13 +20,10 @@ const FormattedJsonModal = ({
 		<Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
 			<DialogContent className='max-w-2xl overflow-auto'>
 				<DialogHeader>
-					<DialogTitle>Import JSON</DialogTitle>
-					<DialogDescription>
-						Paste your JSON data in the text area below
-					</DialogDescription>
+					<DialogTitle>Formatted JSON</DialogTitle>
 				</DialogHeader>
 				<div className='space-y-4'>
-					<pre className='bg-muted p-4 rounded-md text-sm font-mono'>
+					<pre className='bg-muted p-4 rounded-md text-sm font-mono max-h-[calc(100vh-120px)] h-[350px] overflow-auto'>
 						{JSON.stringify(jsonData, null, 2)}
 					</pre>
 				</div>

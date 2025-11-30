@@ -39,7 +39,7 @@ const MainContainer = () => {
 	};
 
 	return (
-		<div className='min-h-screen p-4 flex justify-center items-center'>
+		<div className='min-h-screen p-4 flex justify-center items-center bg-muted'>
 			<div className='max-w-5xl w-full mx-auto space-y-4'>
 				<div className='flex justify-end gap-2'>
 					<Button
@@ -56,9 +56,15 @@ const MainContainer = () => {
 					</Button>
 				</div>
 
-				<div className='grid grid-cols-2 gap-4 max-h-[calc(100vh-120px)] h-[500px] overflow-auto'>
+				<div className='grid grid-cols-2 gap-4 max-h-[calc(100vh-120px)] h-[500px] overflow-hidden'>
 					<TreeView />
 					<ObjectView />
+				</div>
+
+				<div className='note'>
+					<p className='text-sm text-muted-foreground'>
+						**Note: Double click on a node to rename it.
+					</p>
 				</div>
 			</div>
 

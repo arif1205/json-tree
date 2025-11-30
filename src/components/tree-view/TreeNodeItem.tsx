@@ -196,9 +196,10 @@ const TreeNodeItem = ({
 			<div
 				className={cn(
 					"flex items-center gap-2 py-1 px-2 rounded cursor-pointer group relative z-10 transition-colors",
-					isSelected
-						? "bg-primary/20 hover:bg-primary/30 border border-primary/50"
-						: "hover:bg-accent/50"
+					{
+						"bg-green-200 hover:bg-green-300": isSelected,
+						"hover:bg-accent/50": !isSelected,
+					}
 				)}
 				style={{ paddingLeft: `${level * 20 + 8}px` }}
 				onClick={handleNodeClick}>
@@ -285,15 +286,6 @@ const TreeNodeItem = ({
 				)}
 			</div>
 
-			<DeleteConfirmModal
-				isOpen={isDeleteModalOpen}
-				onClose={() => setIsDeleteModalOpen(false)}
-				onConfirm={handleDeleteConfirm}
-				title='Delete Node'
-				itemName={node.key}
-				description={`Are you sure you want to delete "${node.key}"? This will remove the node and all its children. This action cannot be undone.`}
-			/>
-
 			{isExpanded && hasChildren && (
 				<div className='relative'>
 					{node.children?.map((child, index, array) => (
@@ -307,6 +299,15 @@ const TreeNodeItem = ({
 					))}
 				</div>
 			)}
+
+			<DeleteConfirmModal
+				isOpen={isDeleteModalOpen}
+				onClose={() => setIsDeleteModalOpen(false)}
+				onConfirm={handleDeleteConfirm}
+				title='Delete Node'
+				itemName={node.key}
+				description={`Are you sure you want to delete "${node.key}"? This will remove the node and all its children. This action cannot be undone.`}
+			/>
 		</div>
 	);
 };

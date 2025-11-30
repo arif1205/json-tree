@@ -64,23 +64,24 @@ const ObjectView = () => {
 	}
 
 	return (
-		<Card className='h-full'>
-			<CardHeader>
+		<Card className='overflow-hidden gap-2'>
+			<CardHeader className='px-4! border-b border-border pb-3!'>
 				<CardTitle>Object View</CardTitle>
 			</CardHeader>
-			<CardContent className='h-full overflow-auto'>
-				{breadcrumb && (
-					<div className='mb-4 p-3 rounded-md bg-muted border border-border'>
-						<span className='text-sm font-medium text-muted-foreground'>
-							Path:{" "}
+			<CardContent className='max-h-[calc(100vh-120px)] h-[600px] overflow-auto'>
+				{parsedData !== null && (
+					<div className='mb-4'>
+						<span className='text-sm font-semibold text-muted-foreground'>
+							Selected Node:{" "}
 						</span>
-						<span className='text-sm font-semibold text-foreground'>
-							{breadcrumb}
+						<span className='text-sm font-medium text-foreground'>
+							{breadcrumb || "No node selected"}
 						</span>
 					</div>
 				)}
+
 				{parsedData ? (
-					<pre className='bg-muted p-4 rounded-md text-sm font-mono'>
+					<pre className='bg-muted p-4 rounded-md text-sm font-mono max-h-[calc(100vh-120px)] h-[350px] overflow-auto'>
 						{formatAsObject(parsedData)}
 					</pre>
 				) : (
