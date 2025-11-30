@@ -3,7 +3,6 @@ import type { TreeNode } from "@/types/index.types";
 
 /**
  * Custom hook to transform JSON data into a tree structure
- * Each node has a unique ID based on its path for future operations (delete/update)
  */
 export const useJsonTree = () => {
 	const { jsonData } = useGlobalState();
@@ -19,7 +18,7 @@ export const useJsonTree = () => {
 	 * Recursively transforms a JSON value into a TreeNode
 	 * @param value - The value to transform
 	 * @param key - The key name for this node
-	 * @param path - The full path to this node (for unique ID generation)
+	 * @param path - The full path to this node
 	 * @returns TreeNode
 	 */
 	const transformToTree = (
@@ -27,15 +26,16 @@ export const useJsonTree = () => {
 		key: string,
 		path: string
 	): TreeNode => {
-		// Build the current path - handle array indices differently
+		// Build the current path
+		// EXCEPTION: Handle array indices differently
 		const isArrayIndex = key.startsWith("[") && key.endsWith("]");
 		const currentPath = path
 			? isArrayIndex
-				? `${path}${key}` // For arrays: root[0], root[0].key[1]
-				: `${path}.${key}` // For objects: root.key, root.key.nested
-			: key; // Root level
+				? `${path}${key}`
+				: `${path}.${key}`
+			: key;
 
-		// Handle null or undefined
+		// Handle null/undefined values
 		if (value === null || value === undefined) {
 			return {
 				id: currentPath,
@@ -47,7 +47,7 @@ export const useJsonTree = () => {
 			};
 		}
 
-		// Handle arrays
+		// Handle array values
 		if (Array.isArray(value)) {
 			return {
 				id: currentPath,
@@ -61,7 +61,7 @@ export const useJsonTree = () => {
 			};
 		}
 
-		// Handle objects
+		// Handle object values
 		if (typeof value === "object") {
 			const entries = Object.entries(value);
 			return {
@@ -79,7 +79,7 @@ export const useJsonTree = () => {
 			};
 		}
 
-		// Handle primitives (string, number, boolean)
+		// Handle primitive values (string, number, boolean)
 		return {
 			id: currentPath,
 			key,
@@ -90,9 +90,10 @@ export const useJsonTree = () => {
 		};
 	};
 
-	// Handle root level - if it's an object, transform each key
-	// If it's an array, transform it directly
+	// Handle root level
 	// If it's a primitive, wrap it
+	// EXCEPTION: If it's an object, transform each key
+	// EXCEPTION: If it's an array, transform it directly
 	let treeData: TreeNode;
 
 	if (typeof jsonData === "object" && jsonData !== null) {
