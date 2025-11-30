@@ -466,14 +466,14 @@ const TreeNodeItem = ({
 						{/* Rename Button */}
 						<button
 							onClick={handleRenameClick}
-							className='opacity-0 group-hover:opacity-100 transition-opacity shrink-0 flex items-center justify-center size-5 rounded-full bg-blue-500 hover:bg-blue-600 text-white cursor-pointer'
+							className='shrink-0 flex items-center justify-center size-5 rounded-full bg-blue-300 hover:bg-blue-500 text-white cursor-pointer'
 							aria-label='Rename node'>
 							<Pencil className='size-3' />
 						</button>
 						{/* Delete Button */}
 						<button
 							onClick={handleDeleteClick}
-							className='opacity-0 group-hover:opacity-100 transition-opacity shrink-0 flex items-center justify-center size-5 rounded-full bg-red-500 hover:bg-red-600 text-white cursor-pointer'
+							className='shrink-0 flex items-center justify-center size-5 rounded-full bg-red-300 hover:bg-red-500 text-white cursor-pointer'
 							aria-label='Delete node'>
 							<Minus className='size-3' strokeWidth={3} />
 						</button>

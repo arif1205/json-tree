@@ -1,15 +1,13 @@
-import { useGlobalState } from "@/hooks/store/useGlobalStore.hooks";
 import { useAppDispatch } from "@/hooks/store/useStore.hooks";
 import { setJsonData } from "@/store/slice/global/globalSlice";
 import { useState } from "react";
 import { toast } from "sonner";
 import ImportJsonModal from "../modal/import/ImportJson.modal";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import ObjectView from "../object-view/ObjectView";
 import TreeView from "../tree-view/TreeView";
 
 const MainContainer = () => {
 	const dispatch = useAppDispatch();
-	const { jsonData } = useGlobalState();
 	const [jsonInput, setJsonInput] = useState("");
 	/**
 	 * Modal controllers
@@ -42,23 +40,7 @@ const MainContainer = () => {
 
 				<div className='grid grid-cols-2 gap-4 max-h-[calc(100vh-120px)] h-[500px] overflow-auto'>
 					<TreeView />
-
-					<Card className='h-full'>
-						<CardHeader>
-							<CardTitle>JSON</CardTitle>
-						</CardHeader>
-						<CardContent className='h-full overflow-auto'>
-							{jsonData ? (
-								<pre className='bg-muted p-4 rounded-md text-sm font-mono'>
-									{JSON.stringify(jsonData, null, 2)}
-								</pre>
-							) : (
-								<div className='flex items-center justify-center h-full text-muted-foreground'>
-									No JSON data loaded
-								</div>
-							)}
-						</CardContent>
-					</Card>
+					<ObjectView />
 				</div>
 			</div>
 		</div>
