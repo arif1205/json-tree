@@ -11,6 +11,7 @@ import { calculateBreadcrumb } from "@/lib/json.lib";
 const savedData = localStorageUtils.get<string>(JSON_STORAGE_KEY);
 const initialState: GlobalState = {
 	jsonData: savedData || null,
+	undo: null,
 	selectedNodeId: null,
 	breadcrumb: "",
 };
@@ -34,6 +35,15 @@ const globalSlice = createSlice({
 		setBreadcrumb: (state, action: PayloadAction<string>) => {
 			state.breadcrumb = action.payload;
 		},
+		setUndo: (state, action: PayloadAction<unknown | null>) => {
+			state.undo = action.payload;
+		},
+		undo: (state) => {
+			if (state.undo !== null) {
+				state.jsonData = state.undo;
+				state.undo = null;
+			}
+		},
 	},
 });
 
@@ -43,11 +53,30 @@ export const {
 	clearJsonData,
 	setSelectedNodeId,
 	setBreadcrumb,
+	setUndo,
+	undo,
 } = globalSlice.actions;
 export default globalSlice.reducer;
 
 export const globalSliceMiddleware: Middleware =
 	(store) => (next) => (action) => {
+		/**
+		 * Save current jsonData to undo BEFORE any action that modifies jsonData
+		 */
+		const stateBeforeAction = store.getState() as { global: GlobalState };
+		const willModifyJson =
+			importJson.match(action) ||
+			setJsonData.match(action) ||
+			clearJsonData.match(action);
+
+		if (willModifyJson && stateBeforeAction.global.jsonData !== null) {
+			// Deep clone the current jsonData to undo
+			const currentJsonData = stateBeforeAction.global.jsonData;
+			const clonedJsonData = JSON.parse(JSON.stringify(currentJsonData));
+			// Update undo in state before proceeding
+			store.dispatch(setUndo(clonedJsonData));
+		}
+
 		const result = next(action);
 		/**
 		 * Update the localStorage when the related actions are dispatched
@@ -84,6 +113,23 @@ export const globalSliceMiddleware: Middleware =
 				localStorageUtils.set(JSON_STORAGE_KEY, state.global.jsonData);
 				store.dispatch(setSelectedNodeId(null));
 				store.dispatch(setBreadcrumb(""));
+			} catch (error) {
+				console.error("Failed to save JSON data to localStorage:", error);
+			}
+		}
+
+		/**
+		 * Handle undo action - save to localStorage
+		 */
+		if (undo.match(action)) {
+			const state = store.getState() as { global: GlobalState };
+
+			try {
+				if (state.global.jsonData !== null) {
+					localStorageUtils.set(JSON_STORAGE_KEY, state.global.jsonData);
+				} else {
+					localStorageUtils.remove(JSON_STORAGE_KEY);
+				}
 			} catch (error) {
 				console.error("Failed to save JSON data to localStorage:", error);
 			}

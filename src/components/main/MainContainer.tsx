@@ -1,7 +1,7 @@
 import { useGlobalState } from "@/hooks/store/useGlobalStore.hooks";
 import { useAppDispatch } from "@/hooks/store/useStore.hooks";
-import { importJson } from "@/store/slice/global/globalSlice";
-import { Eye, Import } from "lucide-react";
+import { importJson, undo } from "@/store/slice/global/globalSlice";
+import { Eye, Import, Undo2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import FormattedJsonModal from "../modal/formatted-json/FormattedJson.modal";
@@ -12,7 +12,7 @@ import { Button } from "../ui/button";
 
 const MainContainer = () => {
 	const dispatch = useAppDispatch();
-	const { jsonData } = useGlobalState();
+	const { jsonData, undo: undoData } = useGlobalState();
 	const [jsonInput, setJsonInput] = useState("");
 	/**
 	 * Modal controllers
@@ -38,10 +38,21 @@ const MainContainer = () => {
 		}
 	};
 
+	const handleUndo = () => {
+		dispatch(undo());
+		toast.success("Undo successful");
+	};
+
 	return (
 		<div className='min-h-screen p-4 flex justify-center items-center bg-muted'>
 			<div className='max-w-5xl w-full mx-auto space-y-4'>
 				<div className='flex justify-end gap-2'>
+					{undoData !== null && (
+						<Button onClick={handleUndo} variant={"outline"} size={"sm"}>
+							<Undo2 className='size-4 mr-2' />
+							Undo
+						</Button>
+					)}
 					<Button
 						onClick={() => setIsFormattedJsonModalOpen(true)}
 						variant={"outline"}

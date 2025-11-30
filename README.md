@@ -23,12 +23,23 @@ A modern, interactive JSON tree viewer and editor built with React, Redux Toolki
 
 ### Bonus Features (✅ Partially Implemented)
 
-- **Add/Rename Nodes**: Double-click on any node to rename or click to add a new node its key while preserving key order (Partially Implemented, only rename is implemented)
-- **Formatted JSON View**: View the JSON data in standard formatted JSON format via a modal (implemented)
-- **Undo**: Not implemented
+- **Formatted JSON View**: Implemented
+- **Undo**: Implemented
+- **Add/Rename Nodes**: Partially Implemented, only rename is implemented
 - **Drag and drop**: Not implemented
 
 ## 🛠️ Technology Stack
+
+### Framework Choice: **React.js**
+
+**Why React?**
+
+- **Component Reusability**: React's component-based architecture makes it easy to build reusable tree node components
+- **State Management**: Redux Toolkit provides excellent state management for complex JSON operations
+- **Performance**: React's virtual DOM and efficient rendering are ideal for dynamic tree structures
+- **Ecosystem**: Rich ecosystem of libraries and tools (shadcn/ui, Tailwind CSS, etc.)
+- **TypeScript Support**: Excellent TypeScript integration for type safety
+- **Developer Experience**: Great tooling, debugging, and development experience
 
 ### Core Technologies
 
