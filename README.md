@@ -8,25 +8,22 @@ A modern, interactive JSON tree viewer and editor built with React, Redux Toolki
 
 ## 🎯 Features
 
-### Required Features (✅ Implemented)
+### Required Features
 
-- **JSON Import**: Import JSON data via a modal dialog with text input
-- **Collapsible Tree View**: Visualize JSON data as an expandable/collapsible tree structure with proper nesting
-- **Node Selection**: Click on any node to select it, with visual highlighting
-- **Breadcrumb Navigation**: Shows the exact path of the selected node (e.g., `parent > child > selectedNode`)
-- **Delete Nodes**:
-  - Delete any node (except first-level nodes and root)
-  - Confirmation modal before deletion
-  - Updates both tree view and object view in real-time
-- **Persistence**: All changes are automatically saved to localStorage and persist across page refreshes
-- **Object View**: Displays the JSON structure in a formatted, object-like syntax (unquoted keys)
+- **JSON Import**: (✅ Implemented)
+- **Collapsible Tree View**: (✅ Implemented)
+- **Node Selection and highlights**: (✅ Implemented)
+- **Breadcrumb Navigation**: (✅ Implemented)
+- **Delete Nodes**: (✅ Implemented)
+- **Persistence**: (✅ Implemented)
+- **Object View**: (✅ Implemented)
 
 ### Bonus Features (✅ Partially Implemented)
 
-- **Formatted JSON View**: Implemented
-- **Undo**: Implemented
-- **Add/Rename Nodes**: Partially Implemented, only rename is implemented
-- **Drag and drop**: Not implemented
+- **Formatted JSON View**: (✅ Implemented)
+- **Undo**: (✅ Implemented)
+- **Add/Rename Nodes**: (✅ Partially Implemented, only rename is implemented)
+- **Drag and drop**: (❌ Not implemented)
 
 ## 🛠️ Technology Stack
 
