@@ -10,6 +10,7 @@ import { JSON_STORAGE_KEY } from "@/data/index.data";
 const savedData = localStorageUtils.get<string>(JSON_STORAGE_KEY);
 const initialState: GlobalState = {
 	jsonData: savedData || null,
+	selectedNodeId: null,
 };
 
 const globalSlice = createSlice({
@@ -24,10 +25,14 @@ const globalSlice = createSlice({
 		clearJsonData: (state) => {
 			state.jsonData = null;
 		},
+		setSelectedNodeId: (state, action: PayloadAction<string | null>) => {
+			state.selectedNodeId = action.payload;
+		},
 	},
 });
 
-export const { setJsonData, clearJsonData } = globalSlice.actions;
+export const { setJsonData, clearJsonData, setSelectedNodeId } =
+	globalSlice.actions;
 export default globalSlice.reducer;
 
 export const globalSliceMiddleware: Middleware =

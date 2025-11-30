@@ -2,7 +2,10 @@ import { useState } from "react";
 import { useJsonTree } from "@/hooks/json/useJsonTree.hook";
 import { useAppDispatch } from "@/hooks/store/useStore.hooks";
 import { useGlobalState } from "@/hooks/store/useGlobalStore.hooks";
-import { setJsonData } from "@/store/slice/global/globalSlice";
+import {
+	setJsonData,
+	setSelectedNodeId,
+} from "@/store/slice/global/globalSlice";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import {
 	ChevronRight,
@@ -32,13 +35,14 @@ const TreeNodeItem = ({
 	parentIsLast = [],
 }: TreeNodeItemProps) => {
 	const dispatch = useAppDispatch();
-	const { jsonData } = useGlobalState();
+	const { jsonData, selectedNodeId } = useGlobalState();
 	const [isExpanded, setIsExpanded] = useState(level < 2); // Auto-expand first 2 levels
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [isRenaming, setIsRenaming] = useState(false);
 	const [renameValue, setRenameValue] = useState(node.key);
 	const hasChildren = node.children && node.children.length > 0;
 	const isExpandable = hasChildren;
+	const isSelected = selectedNodeId === node.id;
 
 	/**
 	 * Delete a node from JSON by its path
@@ -338,6 +342,32 @@ const TreeNodeItem = ({
 		}
 	};
 
+	const handleNodeClick = (e: React.MouseEvent) => {
+		// Don't select if clicking on action buttons or input
+		const target = e.target as HTMLElement;
+		if (
+			target.closest("button") ||
+			target.closest("input") ||
+			target.closest("svg")
+		) {
+			return;
+		}
+
+		e.stopPropagation();
+
+		// Handle expand/collapse if node has children
+		if (isExpandable) {
+			setIsExpanded(!isExpanded);
+		}
+
+		// Toggle selection
+		if (isSelected) {
+			dispatch(setSelectedNodeId(null));
+		} else {
+			dispatch(setSelectedNodeId(node.id));
+		}
+	};
+
 	// Don't render root node, only its children
 	if (node.key === "root" && node.children) {
 		return (
@@ -408,10 +438,13 @@ const TreeNodeItem = ({
 			{/* Node content */}
 			<div
 				className={cn(
-					"flex items-center gap-2 py-1 px-2 rounded hover:bg-accent/50 cursor-pointer group relative z-10"
+					"flex items-center gap-2 py-1 px-2 rounded cursor-pointer group relative z-10 transition-colors",
+					isSelected
+						? "bg-primary/20 hover:bg-primary/30 border border-primary/50"
+						: "hover:bg-accent/50"
 				)}
 				style={{ paddingLeft: `${level * 20 + 8}px` }}
-				onClick={() => isExpandable && setIsExpanded(!isExpanded)}>
+				onClick={handleNodeClick}>
 				{/* Expand/Collapse Chevron */}
 				{hasChildren ? (
 					isExpanded ? (
