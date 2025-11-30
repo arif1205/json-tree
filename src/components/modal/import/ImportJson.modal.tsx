@@ -16,14 +16,12 @@ const ImportJsonModal = ({
 	setIsModalOpen,
 	jsonInput,
 	setJsonInput,
-	error,
 	handleImportJson,
 }: {
 	isModalOpen: boolean;
 	setIsModalOpen: (isModalOpen: boolean) => void;
 	jsonInput: string;
 	setJsonInput: (jsonInput: string) => void;
-	error: string | null;
 	handleImportJson: () => void;
 }) => {
 	return (
@@ -51,11 +49,6 @@ const ImportJsonModal = ({
 						placeholder='Paste JSON data here...'
 						className='min-h-[300px]'
 					/>
-					{error && (
-						<div className='p-3 rounded-md bg-destructive/10 text-destructive text-sm'>
-							{error}
-						</div>
-					)}
 				</div>
 				<DialogFooter>
 					<Button variant='outline' onClick={() => setIsModalOpen(false)}>
