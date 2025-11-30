@@ -5,6 +5,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import ImportJsonModal from "../modal/import/ImportJson.modal";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import TreeView from "../tree-view/TreeView";
 
 const MainContainer = () => {
 	const dispatch = useAppDispatch();
@@ -39,19 +40,14 @@ const MainContainer = () => {
 					/>
 				</div>
 
-				<div className='grid grid-cols-2 gap-4 max-h-[calc(100vh-120px)] h-[500px]'>
-					<Card className='h-full'>
-						<CardHeader>
-							<CardTitle>Tree</CardTitle>
-						</CardHeader>
-						<CardContent className='h-[calc(100%-80px)] overflow-auto'></CardContent>
-					</Card>
+				<div className='grid grid-cols-2 gap-4 max-h-[calc(100vh-120px)] h-[500px] overflow-auto'>
+					<TreeView />
 
 					<Card className='h-full'>
 						<CardHeader>
 							<CardTitle>JSON</CardTitle>
 						</CardHeader>
-						<CardContent className='h-[calc(100%-80px)] overflow-auto'>
+						<CardContent className='h-full overflow-auto'>
 							{jsonData ? (
 								<pre className='bg-muted p-4 rounded-md text-sm font-mono'>
 									{JSON.stringify(jsonData, null, 2)}
