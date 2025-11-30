@@ -6,9 +6,7 @@ const globalSlice = createSlice({
 	name: "global",
 	initialState,
 	reducers: {
-		setGlobalState: (state, action) => {
-			state = action.payload;
-		},
+		setGlobalState: () => {},
 	},
 });
 
