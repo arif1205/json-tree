@@ -1,5 +1,7 @@
+import MainContainer from "./components/main/MainContainer";
+
 function App() {
-	return <div className=''></div>;
+	return <MainContainer />;
 }
 
 export default App;
