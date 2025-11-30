@@ -19,9 +19,10 @@ const globalSlice = createSlice({
 	name: "global",
 	initialState,
 	reducers: {
+		importJson: (state, action: PayloadAction<string>) => {
+			state.jsonData = action.payload;
+		},
 		setJsonData: (state, action: PayloadAction<string>) => {
-			console.log(action.payload);
-
 			state.jsonData = action.payload;
 		},
 		clearJsonData: (state) => {
@@ -36,8 +37,13 @@ const globalSlice = createSlice({
 	},
 });
 
-export const { setJsonData, clearJsonData, setSelectedNodeId, setBreadcrumb } =
-	globalSlice.actions;
+export const {
+	importJson,
+	setJsonData,
+	clearJsonData,
+	setSelectedNodeId,
+	setBreadcrumb,
+} = globalSlice.actions;
 export default globalSlice.reducer;
 
 export const globalSliceMiddleware: Middleware =
@@ -63,6 +69,21 @@ export const globalSliceMiddleware: Middleware =
 
 			try {
 				localStorageUtils.set(JSON_STORAGE_KEY, state.global.jsonData);
+			} catch (error) {
+				console.error("Failed to save JSON data to localStorage:", error);
+			}
+		}
+
+		/**
+		 * While import new json data, reset everything else
+		 */
+		if (importJson.match(action)) {
+			const state = store.getState() as { global: GlobalState };
+
+			try {
+				localStorageUtils.set(JSON_STORAGE_KEY, state.global.jsonData);
+				store.dispatch(setSelectedNodeId(null));
+				store.dispatch(setBreadcrumb(""));
 			} catch (error) {
 				console.error("Failed to save JSON data to localStorage:", error);
 			}

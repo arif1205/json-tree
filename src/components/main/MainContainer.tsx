@@ -1,14 +1,14 @@
+import { useGlobalState } from "@/hooks/store/useGlobalStore.hooks";
 import { useAppDispatch } from "@/hooks/store/useStore.hooks";
-import { setJsonData } from "@/store/slice/global/globalSlice";
+import { importJson } from "@/store/slice/global/globalSlice";
+import { Eye, Import } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import FormattedJsonModal from "../modal/formatted-json/FormattedJson.modal";
 import ImportJsonModal from "../modal/import/ImportJson.modal";
 import ObjectView from "../object-view/ObjectView";
 import TreeView from "../tree-view/TreeView";
 import { Button } from "../ui/button";
-import { Eye, Import } from "lucide-react";
-import { useGlobalState } from "@/hooks/store/useGlobalStore.hooks";
-import FormattedJsonModal from "../modal/formatted-json/FormattedJson.modal";
 
 const MainContainer = () => {
 	const dispatch = useAppDispatch();
@@ -23,8 +23,13 @@ const MainContainer = () => {
 
 	const handleImportJson = () => {
 		try {
-			const parsed = JSON.parse(jsonInput);
-			dispatch(setJsonData(parsed));
+			/**
+			 * Ignore the comments in the json input
+			 */
+			const parsed = JSON.parse(
+				jsonInput.replace(/(\/\/.*$)|(\/\*[\s\S]*?\*\/)/g, "")
+			);
+			dispatch(importJson(parsed));
 			setJsonInput("");
 			setIsImportJsonModalOpen(false);
 		} catch {
