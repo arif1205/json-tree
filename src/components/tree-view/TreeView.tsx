@@ -8,6 +8,7 @@ import { ChevronRight, ChevronDown, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { TreeNode } from "@/types/index.types";
 import { toast } from "sonner";
+import DeleteConfirmModal from "../modal/delete/DeleteConfirm.modal";
 
 interface TreeNodeItemProps {
 	node: TreeNode;
@@ -25,6 +26,7 @@ const TreeNodeItem = ({
 	const dispatch = useAppDispatch();
 	const { jsonData } = useGlobalState();
 	const [isExpanded, setIsExpanded] = useState(level < 2); // Auto-expand first 2 levels
+	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const hasChildren = node.children && node.children.length > 0;
 	const isExpandable = hasChildren;
 
@@ -98,9 +100,12 @@ const TreeNodeItem = ({
 		return cloned;
 	};
 
-	const handleDelete = (e: React.MouseEvent) => {
+	const handleDeleteClick = (e: React.MouseEvent) => {
 		e.stopPropagation();
+		setIsDeleteModalOpen(true);
+	};
 
+	const handleDeleteConfirm = () => {
 		if (!jsonData) {
 			toast.error("No JSON data to delete from");
 			return;
@@ -220,12 +225,22 @@ const TreeNodeItem = ({
 
 				{/* Delete Button */}
 				<button
-					onClick={handleDelete}
+					onClick={handleDeleteClick}
 					className='shrink-0 flex items-center justify-center size-5 rounded-full bg-red-500 hover:bg-red-600 text-white cursor-pointer'
 					aria-label='Delete node'>
 					<Minus className='size-3' strokeWidth={3} />
 				</button>
 			</div>
+
+			{/* Delete Confirmation Modal */}
+			<DeleteConfirmModal
+				isOpen={isDeleteModalOpen}
+				onClose={() => setIsDeleteModalOpen(false)}
+				onConfirm={handleDeleteConfirm}
+				title='Delete Node'
+				itemName={node.key}
+				description={`Are you sure you want to delete "${node.key}"? This will remove the node and all its children. This action cannot be undone.`}
+			/>
 
 			{/* Children */}
 			{isExpanded && hasChildren && (
