@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { useJsonTree } from "@/hooks/json/useJsonTree.hook";
+import { useAppDispatch } from "@/hooks/store/useStore.hooks";
+import { useGlobalState } from "@/hooks/store/useGlobalStore.hooks";
+import { setJsonData } from "@/store/slice/global/globalSlice";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { ChevronRight, ChevronDown, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { TreeNode } from "@/types/index.types";
+import { toast } from "sonner";
 
 interface TreeNodeItemProps {
 	node: TreeNode;
@@ -18,14 +22,110 @@ const TreeNodeItem = ({
 	isLast = false,
 	parentIsLast = [],
 }: TreeNodeItemProps) => {
+	const dispatch = useAppDispatch();
+	const { jsonData } = useGlobalState();
 	const [isExpanded, setIsExpanded] = useState(level < 2); // Auto-expand first 2 levels
 	const hasChildren = node.children && node.children.length > 0;
 	const isExpandable = hasChildren;
 
+	/**
+	 * Delete a node from JSON by its path
+	 * Path format: "root.key1.key2" or "root[0].key1"
+	 */
+	const deleteNodeByPath = (path: string, data: unknown): unknown => {
+		if (!data || path === "root") {
+			// Can't delete root, return as is
+			return data;
+		}
+
+		// Parse the path into segments
+		const segments = path
+			.replace(/^root\.?/, "") // Remove "root." prefix
+			.split(/[.[\]]+/)
+			.filter((seg) => seg !== "");
+
+		if (segments.length === 0) {
+			return data;
+		}
+
+		// Deep clone to avoid mutating original
+		const cloned = JSON.parse(JSON.stringify(data));
+
+		// Navigate to parent and delete the key
+		let current: unknown = cloned;
+		for (let i = 0; i < segments.length - 1; i++) {
+			const segment = segments[i];
+			// Check if segment is an array index
+			if (/^\d+$/.test(segment)) {
+				if (Array.isArray(current)) {
+					current = current[parseInt(segment, 10)];
+				} else {
+					return cloned; // Invalid path
+				}
+			} else {
+				if (
+					typeof current === "object" &&
+					current !== null &&
+					!Array.isArray(current)
+				) {
+					current = (current as Record<string, unknown>)[segment];
+				} else {
+					return cloned; // Invalid path
+				}
+			}
+			if (!current) return cloned; // Path doesn't exist
+		}
+
+		// Get the last segment (the key to delete)
+		const lastSegment = segments[segments.length - 1];
+		if (/^\d+$/.test(lastSegment)) {
+			// Array index
+			const index = parseInt(lastSegment, 10);
+			if (Array.isArray(current)) {
+				current.splice(index, 1);
+			}
+		} else {
+			// Object key
+			if (
+				typeof current === "object" &&
+				current !== null &&
+				!Array.isArray(current)
+			) {
+				delete (current as Record<string, unknown>)[lastSegment];
+			}
+		}
+
+		return cloned;
+	};
+
 	const handleDelete = (e: React.MouseEvent) => {
 		e.stopPropagation();
-		// TODO: Implement delete functionality
-		console.log("Delete node:", node.id);
+
+		if (!jsonData) {
+			toast.error("No JSON data to delete from");
+			return;
+		}
+
+		try {
+			// Parse current JSON (handle both string and object)
+			let currentJson: unknown;
+			if (typeof jsonData === "string") {
+				currentJson = JSON.parse(jsonData);
+			} else {
+				currentJson = jsonData;
+			}
+
+			// Delete the node
+			const updatedJson = deleteNodeByPath(node.path, currentJson);
+
+			// Update the store (always store as string)
+			dispatch(setJsonData(JSON.parse(JSON.stringify(updatedJson))));
+
+			toast.success(`Deleted "${node.key}"`);
+		} catch (error) {
+			console.error("Error deleting node:", error);
+			toast.error("Failed to delete node");
+		}
 	};
 
 	// Don't render root node, only its children

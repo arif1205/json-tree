@@ -17,6 +17,8 @@ const globalSlice = createSlice({
 	initialState,
 	reducers: {
 		setJsonData: (state, action: PayloadAction<string>) => {
+			console.log(action.payload);
+
 			state.jsonData = action.payload;
 		},
 		clearJsonData: (state) => {
@@ -48,6 +50,7 @@ export const globalSliceMiddleware: Middleware =
 		 */
 		if (setJsonData.match(action)) {
 			const state = store.getState() as { global: GlobalState };
+
 			try {
 				localStorageUtils.set(JSON_STORAGE_KEY, state.global.jsonData);
 			} catch (error) {

@@ -1,10 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import globalReducer from "./slice/global/globalSlice";
+import globalReducer, {
+	globalSliceMiddleware,
+} from "./slice/global/globalSlice";
 
 export const store = configureStore({
 	reducer: {
 		global: globalReducer,
 	},
+	middleware: (getDefaultMiddleware) =>
+		getDefaultMiddleware().concat(globalSliceMiddleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

@@ -32,7 +32,7 @@ const ImportJsonModal = ({
 					Import
 				</Button>
 			</DialogTrigger>
-			<DialogContent className='max-w-2xl'>
+			<DialogContent className='max-w-2xl overflow-auto'>
 				<DialogHeader>
 					<DialogTitle>Import JSON</DialogTitle>
 					<DialogDescription>
@@ -47,7 +47,7 @@ const ImportJsonModal = ({
 							setJsonInput(e.target.value)
 						}
 						placeholder='Paste JSON data here...'
-						className='min-h-[300px]'
+						className='min-h-[300px] max-h-[500px] overflow-auto'
 					/>
 				</div>
 				<DialogFooter>
