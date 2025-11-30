@@ -202,11 +202,7 @@ const TreeNodeItem = ({
 
 			<div
 				className={cn(
-					"flex items-center gap-2 py-1 px-2 rounded cursor-pointer group relative z-10 transition-colors",
-					{
-						"bg-green-200 hover:bg-green-300": isSelected,
-						"hover:bg-accent/50": !isSelected,
-					}
+					"flex items-center gap-2 py-1 px-2 rounded cursor-pointer group relative z-10 transition-colors hover:bg-accent/50"
 				)}
 				style={{ paddingLeft: `${level * 20 + 8}px` }}
 				onClick={handleNodeClick}>
@@ -266,7 +262,9 @@ const TreeNodeItem = ({
 					</div>
 				) : (
 					<span
-						className='text-sm font-medium text-foreground flex-1 truncate py-1'
+						className={cn("text-sm font-medium flex-1 truncate py-1", {
+							"underline text-blue-600! font-semibold": isSelected,
+						})}
 						onDoubleClick={(e) => {
 							e.stopPropagation();
 							setIsRenaming(true);

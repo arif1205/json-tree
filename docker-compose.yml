@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  json-tree-explorer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    container_name: json-tree-explorer
+    restart: unless-stopped
