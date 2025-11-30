@@ -29,7 +29,7 @@ const TreeNodeItem = ({
 }: TreeNodeItemProps) => {
 	const dispatch = useAppDispatch();
 	const { jsonData, selectedNodeId } = useGlobalState();
-	const [isExpanded, setIsExpanded] = useState(level < 2); // Auto-expand first 2 levels
+	const [isExpanded, setIsExpanded] = useState(true);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [isRenaming, setIsRenaming] = useState(false);
 	const [renameValue, setRenameValue] = useState(node.key);
@@ -38,6 +38,12 @@ const TreeNodeItem = ({
 	const isSelected = selectedNodeId === node.id;
 
 	const handleDeleteConfirm = () => {
+		// Prevent deletion of first-level nodes
+		if (level === 0) {
+			toast.error("Cannot delete first-level nodes");
+			return;
+		}
+
 		if (!jsonData) {
 			toast.error("No JSON data to delete from");
 			return;
@@ -153,31 +159,32 @@ const TreeNodeItem = ({
 				<div
 					className='absolute left-0 top-0 bottom-0 pointer-events-none'
 					style={{ width: `${(level + 1) * 20}px` }}>
-					{parentIsLast.map((isParentLast, idx) => {
-						if (isParentLast) return null;
+					{parentIsLast.map((_isParentLast, idx) => {
 						return (
 							<div
 								key={idx}
 								className='absolute top-0 bottom-0'
 								style={{
-									left: `${idx * 20 + 10}px`,
+									left: `${idx * 20 + 15}px`,
 									width: "1px",
-									backgroundColor: "hsl(var(--border))",
+									backgroundColor: "var(--color-foreground)",
 								}}
 							/>
 						);
 					})}
-					<div
-						className='absolute'
-						style={{
-							left: `${parentIsLast.length * 20}px`,
-							top: "50%",
-							width: "10px",
-							height: "1px",
-							backgroundColor: "hsl(var(--border))",
-							transform: "translateY(-50%)",
-						}}
-					/>
+					{!hasChildren && (
+						<div
+							className='absolute'
+							style={{
+								left: `${parentIsLast.length * 20 - 5}px`,
+								top: "50%",
+								width: "15px",
+								height: "1px",
+								backgroundColor: "var(--color-foreground)",
+								transform: "translateY(-50%)",
+							}}
+						/>
+					)}
 					{!isLast && (
 						<div
 							className='absolute'
@@ -186,7 +193,7 @@ const TreeNodeItem = ({
 								top: "50%",
 								bottom: 0,
 								width: "1px",
-								backgroundColor: "hsl(var(--border))",
+								backgroundColor: "var(--color-freground)",
 							}}
 						/>
 					)}
@@ -269,7 +276,7 @@ const TreeNodeItem = ({
 					</span>
 				)}
 
-				{!isRenaming && (
+				{!isRenaming && level > 0 && (
 					<div className='flex items-center gap-1 shrink-0'>
 						<Button
 							variant='ghost'
