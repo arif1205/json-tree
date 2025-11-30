@@ -51,7 +51,7 @@ const formatAsObject = (data: unknown, indent = 0): string => {
 };
 
 const ObjectView = () => {
-	const { jsonData } = useGlobalState();
+	const { jsonData, breadcrumb } = useGlobalState();
 
 	// Parse JSON if it's a string, otherwise use as is
 	let parsedData: unknown = jsonData;
@@ -69,6 +69,16 @@ const ObjectView = () => {
 				<CardTitle>Object View</CardTitle>
 			</CardHeader>
 			<CardContent className='h-full overflow-auto'>
+				{breadcrumb && (
+					<div className='mb-4 p-3 rounded-md bg-muted border border-border'>
+						<span className='text-sm font-medium text-muted-foreground'>
+							Path:{" "}
+						</span>
+						<span className='text-sm font-semibold text-foreground'>
+							{breadcrumb}
+						</span>
+					</div>
+				)}
 				{parsedData ? (
 					<pre className='bg-muted p-4 rounded-md text-sm font-mono'>
 						{formatAsObject(parsedData)}
