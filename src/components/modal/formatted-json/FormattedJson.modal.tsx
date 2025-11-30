@@ -7,20 +7,15 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
 
-const ImportJsonModal = ({
+const FormattedJsonModal = ({
 	isModalOpen,
 	setIsModalOpen,
-	jsonInput,
-	setJsonInput,
-	handleImportJson,
+	jsonData,
 }: {
 	isModalOpen: boolean;
 	setIsModalOpen: (isModalOpen: boolean) => void;
-	jsonInput: string;
-	setJsonInput: (jsonInput: string) => void;
-	handleImportJson: () => void;
+	jsonData: unknown;
 }) => {
 	return (
 		<Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
@@ -32,25 +27,18 @@ const ImportJsonModal = ({
 					</DialogDescription>
 				</DialogHeader>
 				<div className='space-y-4'>
-					<Textarea
-						id='json-input'
-						value={jsonInput}
-						onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-							setJsonInput(e.target.value)
-						}
-						placeholder='Paste JSON data here...'
-						className='min-h-[300px] max-h-[500px] overflow-auto'
-					/>
+					<pre className='bg-muted p-4 rounded-md text-sm font-mono'>
+						{JSON.stringify(jsonData, null, 2)}
+					</pre>
 				</div>
 				<DialogFooter>
 					<Button variant='outline' onClick={() => setIsModalOpen(false)}>
 						Cancel
 					</Button>
-					<Button onClick={handleImportJson}>Import</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
 	);
 };
 
-export default ImportJsonModal;
+export default FormattedJsonModal;

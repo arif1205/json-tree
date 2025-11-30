@@ -66,7 +66,7 @@ const ObjectView = () => {
 	return (
 		<Card className='h-full'>
 			<CardHeader>
-				<CardTitle>JSON</CardTitle>
+				<CardTitle>Object View</CardTitle>
 			</CardHeader>
 			<CardContent className='h-full overflow-auto'>
 				{parsedData ? (
