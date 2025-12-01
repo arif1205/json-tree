@@ -213,9 +213,3 @@ The `useJsonTree` hook transforms raw JSON data into a hierarchical `TreeNode` s
 - All JSON data is automatically saved to `localStorage`
 - Data persists across page refreshes
 - State is restored on application load
-
-### Missing Features (Not Implemented)
-
-1. **Add Node**: Ability to add new nodes to the tree structure
-2. **Drag-and-Drop Re-parenting**: Move nodes by dragging and dropping
-3. **Undo/Redo**: Undo last action functionality
